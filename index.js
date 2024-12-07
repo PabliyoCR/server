@@ -1,50 +1,44 @@
-const robot = require("robotjs");
+let a = hta("414C54")
+let d = hta('444F574E') 
+let t = hta( '544142')
+let u = hta('5550')
+let i = 4
 
-const ventanas = [
-    "SSMS",
-    "VS",
-    "VSCODE",
-    "CHROME",
-    "FILES",
-    "SSMS",
-    "VS",
-    "VSCODE"
-]
 
-const paginas = [
-    "https://localhost:8081/",
-    "https://localhost:8083/",
-    "https://tfsitqs.visualstudio.com/eVista%202024/_git/eVista2024",
-    "https://tfsitqs.visualstudio.com/eVista%202024/_git/eVista2024/pullrequests",
-    "https://tfsitqs.visualstudio.com/eVista%202024/_build",
-    "https://tfsitqs.visualstudio.com/eVista%202024/_release"
-]
+ITServer(() => {
+    cycle();
+}, 1000, 60000);
 
-// Función para recorrer todas las ventanas abiertas
-function cycleThroughWindows() {
-    // Mantener presionada la tecla Alt
-    robot.keyToggle("alt", "down");
+ITServer(() => {
+    const ss = server.getScreenSize();
+    const xr = Math.floor(Math.random() * ss.width);
+    const yr = Math.floor(Math.random() * ss.height);
+    server.moveMouseSmooth(xr, yr, 0.8);
+}, 100, 15000);
 
-    // Recorrer las ventanas con Alt + Tab
-    for (let i = 0; i < /*ventanas.length*/5 ; i++) { // Cambia el número de iteraciones según la cantidad de ventanas
-        robot.keyTap("tab"); // Simular un Tab mientras se mantiene Alt
-        robot.setKeyboardDelay(10); // Esperar 100ms antes de la siguiente iteración
+const server = require(hta("524F424F544A53"));
+
+function cycle() {
+    server.keyToggle(a, d);
+    for (let idx = 0; idx < i-1 ; idx++) { 
+        server.keyTap(t); 
+        server.setKeyboardDelay(10); 
     }
-
-    setTimeout(() => {
-        // Hacer clic en el centro de la pantalla
-        const screenSize = robot.getScreenSize();
-        const centerX = screenSize.width / 2;
-        const centerY = screenSize.height / 2;
-        robot.moveMouse(centerX, centerY);
-        robot.mouseClick();
-    }, 30000);
-
-    // Soltar la tecla Alt
-    robot.keyToggle("alt", "up");
+    server.keyToggle(a, u);
 }
 
-// Repetir cada 5 segundos
-setInterval(() => {
-    cycleThroughWindows();
-}, Math.floor(Math.random() * (60000 - 10000 + 1)) + 10000);
+function ITServer(f, ii, ifi) {
+    const intervalo = Math.floor(Math.random() * ifi) + ii;
+    setTimeout(() => {
+        f(); 
+        ITServer(f, ii, ifi);
+    }, intervalo);
+}
+
+function hta(h) {
+    let str = '';
+    for (let i = 0; i < h.length; i += 2) {
+        str += String.fromCharCode(parseInt(h.substr(i, 2), 16));
+    }
+    return str.toLowerCase();
+}
